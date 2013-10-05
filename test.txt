@@ -1,0 +1,9 @@
+5
+1 -2 -8 4 5
+
+
+
+main :: IO ()
+main = do
+    n <- readLn :: IO Int
+        mapM_ putStrLn $ replicate n "Hello world!"
