@@ -21,13 +21,12 @@ mkFork l r = Fork l r  (chars l ++ chars r) $ weight l + weight r
 
 mkOrdered :: [(Char, Int)] -> [CodeTree]
 mkOrdered = map (\(c, i) -> Leaf c i) . sortBy (\(_, i1) (_, i2) -> compare i1 i2)
--- we can enhance this function to avoid length calculation
--- by checking that there is a head and no tail in (constant time)
+
 singleton :: [CodeTree] -> Bool
-singleton = (== 1) . length
+singleton xs = (null $ tail xs) && (length xs == 1)
 
 combine :: [CodeTree] -> [CodeTree]
-combine (x:y:xs) = insertBy (\a b -> compare (weight a) (weight b)) (mkFork x y) xs
+combine (x:y:xs) = insertBy (\a b -> weight a `compare` weight b) (mkFork x y) xs
 combine x = x
 
 fromList :: [Char] -> CodeTree
