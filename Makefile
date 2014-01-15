@@ -58,27 +58,27 @@ run-pro-gc : compile-prof
 	@time ./$(target-file) +RTS -sstder $(STACK) -RTS
 
 #
-# Runs a give program and collects statistics about time execution of each expresion.
+# Runs a given program and collects statistics about time execution of each expression.
 # Note that the resulting statistics will be put in $(target-file).prof
 #
 run-pro-time : compile-prof
-	time ./$(target-file) +RTS -p  $(STACK) -RTS
+	time ./$(target-file) +RTS -p $(STACK) -RTS
 
 #
 # Runs a given program and gathers statistics related to heap usage
-# -hc = ouputs standard heap usage
+# -hc = outputs standard heap usage
 # It will put the result in $(target-file).hp and will contain samples taken at regular interval
-# If you need to increase or specify anther frequency, use :
+# If you need to increase or specify anther frequency, use:
 # -iN = where N is the number of seconds.
-# It generates a postscript file that contian graph of the gathered results
+# It generates a postscript file that contains a graph of the gathered results
 #
 run-pro-heap : compile-prof
 	time ./$(target-file) +RTS -hc -p $(STACK) -RTS
 	hp2ps -e8in -c $(target-file).hp
 
 #
-# Same as run-pro-heap bat gives statistics per data type
-# -hy = gather statistic of heap usage by data type
+# Same as run-pro-heap but gives statistics per data type
+# -hy = gather statistics of heap usage by data type
 #
 run-pro-heap-type : compile-prof
 	time ./$(target-file) +RTS -hy -p $(STACK) -RTS
@@ -86,7 +86,7 @@ run-pro-heap-type : compile-prof
 
 
 #
-# Same as run-pro-heap bat gives statistics per data constructors
+# Same as run-pro-heap but gives statistics per data constructors
 # -hd = gather statistic of heap usage by data constructors
 #
 run-pro-heap-ctor : compile-prof
