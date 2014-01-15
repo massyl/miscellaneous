@@ -54,14 +54,14 @@ compile-prof :
 # -N = gather statistics about number of OS Threads
 # -kxxxM = increase the heap limit by xxx Mega-bytes
 #
-run-pro-gc : $(compile-prof)
-	time ./$(target-file) +RTS -sstder $(STACK) -RTS
+run-pro-gc : compile-prof
+	@time ./$(target-file) +RTS -sstder $(STACK) -RTS
 
 #
 # Runs a give program and collects statistics about time execution of each expresion.
 # Note that the resulting statistics will be put in $(target-file).prof
 #
-run-pro-time : $(compile-prof)
+run-pro-time : compile-prof
 	time ./$(target-file) +RTS -p  $(STACK) -RTS
 
 #
@@ -72,7 +72,7 @@ run-pro-time : $(compile-prof)
 # -iN = where N is the number of seconds.
 # It generates a postscript file that contian graph of the gathered results
 #
-run-pro-heap : $(compile-prof)
+run-pro-heap : compile-prof
 	time ./$(target-file) +RTS -hc -p $(STACK) -RTS
 	hp2ps -e8in -c $(target-file).hp
 
@@ -80,7 +80,7 @@ run-pro-heap : $(compile-prof)
 # Same as run-pro-heap bat gives statistics per data type
 # -hy = gather statistic of heap usage by data type
 #
-run-pro-heap-type : $(compile-prof)
+run-pro-heap-type : compile-prof
 	time ./$(target-file) +RTS -hy -p $(STACK) -RTS
 	hp2ps -e8in -c $(target-file).hp
 
@@ -89,7 +89,7 @@ run-pro-heap-type : $(compile-prof)
 # Same as run-pro-heap bat gives statistics per data constructors
 # -hd = gather statistic of heap usage by data constructors
 #
-run-pro-heap-ctor : $(compile-prof)
+run-pro-heap-ctor : compile-prof
 	time ./$(target-file) +RTS -hd -p $(STACK) -RTS
 	hp2ps -e8in -c $(target-file).hp
 
