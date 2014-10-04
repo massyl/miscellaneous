@@ -31,7 +31,7 @@ f `bind` st =  State $ \s0 -> runState st s0 $ \a s' k -> runState (f a) s' k
 
 infixr 1 >>>=
 (>>>=) :: State s a -> (a -> State s b) -> State s b
-st >>>= f = f `bind` st
+(>>>=) = flip bind
 
 get :: State s s
 get = State $ \s k ->  k s s
