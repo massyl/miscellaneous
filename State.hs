@@ -48,8 +48,6 @@ execState s st = runState st s $ flip const
 evalState :: s -> State s a -> a
 evalState s st = runState st s const
 
-
-
 -- | making State S a an instance fo Monad to make do notation availalbe
 instance Monad (State s) where
  return = inject
@@ -64,12 +62,16 @@ useState = do
           modify (* 3)
           return r
 
+funcToMap :: Show a => a -> String
+funcToMap a = show a ++ "_mapped"
+
 -- | Run computations using State S a
 main = do
-      print $ (runState $ inject 1) 3 (+)
-      print $ (runState $ get >>>= inject . (+2)) 0 (+)
+      print $ (runState $ return 1) 3 (+)
+      print $ (runState $ get >>>= return . (+2)) 1 const
+      print $ (runState $ get >>>= return . (+2)) 1 (+)
       putStrLn "using execState with get and put : "
       print $  execState 1 useState 
       putStrLn "using evalState with get and put : "
       print $ evalState 1  useState
-          
+      print $ evalState 4 (mapS funcToMap (get >>>= return . (+2)))
