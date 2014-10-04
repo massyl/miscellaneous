@@ -67,7 +67,7 @@ useState = do
 -- | Run computations using State S a
 main = do
       print $ (runState $ inject 1) 3 (+)
-      print $ (runState $ get >>>= (\a -> inject $ a + 2)) 0 (+)
+      print $ (runState $ get >>>= inject . (+2)) 0 (+)
       putStrLn "using execState with get and put : "
       print $  execState 1 useState 
       putStrLn "using evalState with get and put : "
