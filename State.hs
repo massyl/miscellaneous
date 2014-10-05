@@ -19,10 +19,12 @@ where
 
 newtype State s a = State { runState :: forall r. s -> (a -> s -> r) -> r }
 
--- | alternative implementation of return
--- | inject a = State $ \s f -> f a s
 inject :: a -> State s a
 inject a = State $ flip ($ a) 
+
+-- | alternative implementation of return
+inject' :: a -> State s a
+inject' a = State $ \s f -> f a s
 
 -- | maps a give function through a given state to get new state
 mapS :: (a -> b) -> State s a -> State s b
