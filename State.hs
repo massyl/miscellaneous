@@ -17,6 +17,8 @@ module StateCont (
    State)
 where
 
+import Control.Monad (liftM)
+
 newtype State s a = State { runState :: forall r. s -> (a -> s -> r) -> r }
 
 inject :: a -> State s a
@@ -89,10 +91,10 @@ funcToMap a = show a ++ "_mapped"
 -- | Run computations using State S a
 main = do
       print $ (runState $ return 1) 3 (+)
-      print $ (runState $ get >>= return . (+2)) 1 const
-      print $ (runState $ get >>= return . (+2)) 1 (+)
+      print $ (runState $ liftM (+2) get) 1 const
+      print $ (runState $ liftM (+2) get) 1 (+)
       putStrLn "using execState with get and put : "
       print $  execState 1 useState 
       putStrLn "using evalState with get and put : "
       print $ evalState 1  useState
-      print $ evalState 4 (mapS funcToMap (get >>= return . (+2)))
+      print $ evalState 4 (mapS funcToMap (liftM (+2) get))
