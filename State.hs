@@ -1,9 +1,9 @@
 {-# LANGUAGE RankNTypes #-}
 
 module StateCont (
-   -- | inject pure value inside a statefull computation
+   -- | inject pure value inside a stateful computation
    inject, 
-   -- |Chain statfull computations
+   -- |Chain stateful computations
    (>>>=), 
    -- | Consult the state
    get,
@@ -32,9 +32,9 @@ inject' a = State $ \s f -> f a s
 mapS :: (a -> b) -> State s a -> State s b
 mapS f = (>>>= inject . f)
 
--- | executes the given statefull computation using intial state s0, extract intermediate state s' and
--- | intermediate result. Applies the given function to intermediate result to get an new statefull
--- | computation and then executes this new statefull computation with intermediate state
+-- | executes the given stateful computation using intial state s0, extract intermediate state s' and
+-- | intermediate result. Applies the given function to intermediate result to get an new stateful
+-- | computation and then executes this new stateful computation with intermediate state
 bind ::  State s a -> (a -> State s b) -> State s b
 st `bind` f =  State $ \s0 -> runState st s0 $ \a s' k -> runState (f a) s' k
 
