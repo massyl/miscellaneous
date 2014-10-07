@@ -2,17 +2,17 @@
 
 module StateCont (
    -- | inject pure value inside a stateful computation
-   inject, 
+   inject,
    -- |Chain stateful computations
-   (>>>=), 
+   (>>>=),
    -- | Consult the state
    get,
    -- Change the state
    put,
    -- | modify the state using the given function
-   modify, 
+   modify,
    -- | map a given function throught a given state
-   mapS, 
+   mapS,
    -- | State type constructor
    State)
 where
@@ -22,7 +22,7 @@ import Control.Monad (liftM)
 newtype State s a = State { runState :: forall r. s -> (a -> s -> r) -> r }
 
 inject :: a -> State s a
-inject a = State $ flip ($ a) 
+inject a = State $ flip ($ a)
 
 -- | alternative implementation of return
 inject' :: a -> State s a
@@ -31,6 +31,10 @@ inject' a = State $ \s f -> f a s
 -- | maps a give function through a given state to get new state
 mapS :: (a -> b) -> State s a -> State s b
 mapS f = (>>>= inject . f)
+
+-- | Alternative implementation  of mapS
+mapS' :: (a -> b) -> State s a -> State s b
+mapS' f st = State $ \s0 -> runState st s0 $ \a s k ->(k . f) a s
 
 -- | executes the given stateful computation using intial state s0, extract intermediate state s' and
 -- | intermediate result. Applies the given function to intermediate result to get an new stateful
@@ -57,7 +61,7 @@ put' s =  State $ \_ -> flip ($ ()) s
 
 -- | uplies the given function to current State
 modify  :: (s -> s) -> State s ()
-modify f = get >>= put . f 
+modify f = get >>= put . f
 
 -- | Alternative implementation of modify
 modify'  :: (s -> s) -> State s ()
@@ -78,7 +82,7 @@ instance Monad (State s) where
 
 -- | simple function that manipulate the State, just to show how we can use it
 useState ::State Int Int
-useState = do 
+useState = do
           s <- get
           let r = s*3 + 1
           put r
@@ -94,7 +98,7 @@ main = do
       print $ (runState $ liftM (+2) get) 1 const
       print $ (runState $ liftM (+2) get) 1 (+)
       putStrLn "using execState with get and put : "
-      print $  execState 1 useState 
+      print $  execState 1 useState
       putStrLn "using evalState with get and put : "
       print $ evalState 1  useState
       print $ evalState 4 (mapS funcToMap (liftM (+2) get))
