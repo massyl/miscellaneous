@@ -1,5 +1,9 @@
 {-# LANGUAGE RankNTypes  #-}
 
+------------------------------------------------------------------------------------------------------
+-- | Note that this implementation, mainly machine exampes are inspired by : Reverse Engineering Machines
+-- | With Yoneda Lemma from :  A Neighborhood of Infinity Blog
+------------------------------------------------------------------------------------------------------ 
 module Yoneda where
 import Data.Functor.Identity
 
