@@ -104,11 +104,18 @@ execState s st = runState st s $ flip const
 evalState :: s -> State s a -> a
 evalState s st = runState st s const
 
+instance Functor (State s) where
+  fmap f (State s)= State $ \s0 k -> s s0 (k . f)
+
+instance Applicative (State s)  where
+  pure = inject
+  State mf <*> State ma = State $ \s0 k -> mf s0 $ \f s' -> ma s' (k . f)
+
 --------------------------------------------------------------------------------------------------
 -- | making State s a an instance fo monad to make do notation availalbe
 --------------------------------------------------------------------------------------------------
 instance Monad (State s) where
- return = inject
+ return = pure
  (>>=) = (>>>=)
 
 ---------------------------------------------------------------------------------------------------
@@ -128,6 +135,7 @@ funcToMap a = show a ++ "_mapped"
 ----------------------------------------------------------------------------------------------------
 -- | Run computations using State S a
 ---------------------------------------------------------------------------------------------------
+main :: IO ()
 main = do
       print $ (runState $ return 1) 3 (+)
       print $ (runState $ liftM (+2) get) 1 const
@@ -137,3 +145,6 @@ main = do
       putStrLn "using evalState with get and put : "
       print $ evalState 1  useState
       print $ evalState 4 (mapS funcToMap (liftM (+2) get))
+      print $ uncurry id (runState ((+) <$> useState) 1 (,))
+      print $ runState useState 1 (+)
+      print $ runState ((+) <$> useState <*> ((*2) <$> get <* put 1)) 1 (,)
